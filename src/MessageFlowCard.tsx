@@ -1,15 +1,15 @@
 import './MessageFlowCard.css';
 
-import { evmCall } from '@zetachain/toolkit/chains/evm';
 import { type PrimaryWallet } from '@zetachain/wallet';
-import { ZeroAddress } from 'ethers';
+import { ethers } from 'ethers';
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from './components/Button';
 import { IconApprove, IconEnvelope, IconSendTitle } from './components/icons';
 import { ConfirmedContent } from './ConfirmedContent';
 import type { SupportedChain } from './constants/chains';
-import { HELLO_UNIVERSAL_CONTRACT_ADDRESS } from './constants/contracts';
+import { NFT_CONTRACT_ADDRESSES } from './constants/contracts';
+import { createNFTContract } from './contracts/EVMUniversalNFT';
 import type { EIP6963ProviderDetail } from './types/wallet';
 import { getSignerAndProvider } from './utils/ethersHelpers';
 import { formatNumberWithLocale } from './utils/formatNumber';
@@ -58,6 +58,21 @@ export function MessageFlowCard({
     }
   };
 
+  const getNFTContractAddress = (chain: SupportedChain | undefined): string | null => {
+    if (!chain) return null;
+    
+    switch (chain.name) {
+      case 'ZetaChain':
+        return NFT_CONTRACT_ADDRESSES.ZETACHAIN;
+      case 'Sepolia':
+        return NFT_CONTRACT_ADDRESSES.SEPOLIA;
+      case 'Base Sepolia':
+        return NFT_CONTRACT_ADDRESSES.BASE_SEPOLIA;
+      default:
+        return null;
+    }
+  };
+
   const handleClick = async () => {
     try {
       const signerAndProvider = await getSignerAndProvider({
@@ -71,39 +86,33 @@ export function MessageFlowCard({
 
       const { signer } = signerAndProvider;
 
-      console.debug('stringValue', stringValue);
+      // Get the NFT contract address for the selected chain
+      const nftContractAddress = getNFTContractAddress(supportedChain);
+      if (!nftContractAddress) {
+        throw new Error('NFT contract not available for selected chain');
+      }
 
-      // const evmCallParams = {
-      //   receiver: HELLO_UNIVERSAL_CONTRACT_ADDRESS,
-      //   types: ['string'],
-      //   values: [stringValue],
-      //   revertOptions: {
-      //     callOnRevert: false,
-      //     revertAddress: ZeroAddress,
-      //     revertMessage: '',
-      //     abortAddress: ZeroAddress,
-      //     onRevertGasLimit: 1000000,
-      //   },
-      // };
-
-      // const evmCallOptions = {
-      //   signer,
-      //   txOptions: {
-      //     gasLimit: 1000000,
-      //   },
-      // };
+      // Get the user's address
+      const userAddress = await signer.getAddress();
+      
+      console.debug('Minting NFT with URI:', stringValue);
+      console.debug('To address:', userAddress);
+      console.debug('Contract address:', nftContractAddress);
 
       setIsUserSigningTx(true);
 
-      // const result = await evmCall(evmCallParams, evmCallOptions);
+      // Create the NFT contract instance and call safeMint
+      const nftContract = createNFTContract(nftContractAddress, signer);
+      const result = await nftContract.safeMint(userAddress, stringValue) as ethers.ContractTransactionResponse;
 
       setIsTxReceiptLoading(true);
 
-      // await result.wait();
+      // Wait for the transaction to be mined
+      await result.wait();
 
-      // setConnectedChainTxHash(result.hash);
+      setConnectedChainTxHash(result.hash);
     } catch (error) {
-      console.error(error);
+      console.error('Error minting NFT:', error);
     } finally {
       setIsUserSigningTx(false);
       setIsTxReceiptLoading(false);
@@ -153,7 +162,7 @@ export function MessageFlowCard({
     <div className="message-flow-container">
       <div className="message-flow-title">
         <IconSendTitle />
-        <span className="message-flow-title-text">Message to Send</span>
+        <span className="message-flow-title-text">NFT Token URI</span>
       </div>
       <div className="message-input-container">
         <textarea
@@ -173,7 +182,7 @@ export function MessageFlowCard({
       <div className="message-separator" />
       {!supportedChain && (
         <span className="message-unsupported-network">
-          Select a network to send a message
+          Select a network to mint an NFT
         </span>
       )}
       <div className="message-input-footer">
@@ -200,7 +209,7 @@ export function MessageFlowCard({
             }
             icon={<IconEnvelope />}
           >
-            Send Message
+            Mint NFT
           </Button>
         </div>
       </div>
