@@ -4,7 +4,7 @@ A React-based web application for minting and transferring NFTs across multiple 
 
 ## Features
 
-- **Multi-Chain NFT Minting**: Mint NFTs on Ethereum Sepolia, Base Sepolia, and ZetaChain
+- **Multi-Chain NFT Minting**: Mint NFTs on Ethereum Sepolia and Base Sepolia
 - **Cross-Chain Transfers**: Seamlessly transfer NFTs between supported chains
 - **Wallet Integration**: Support for multiple wallet providers via EIP-6963 and Dynamic wallet
 - **Local Storage**: NFT metadata and transfer history stored locally
@@ -97,9 +97,9 @@ yarn dev
 
 ```
 src/
-├── components/          # React components
-├── constants/          # Contract addresses and chain configurations
-├── contracts/          # Smart contract ABIs and utilities
+├── components/        # React components
+├── constants/         # Contract addresses and chain configurations
+├── contracts/         # Smart contract ABIs and utilities
 ├── context/           # React context providers
 ├── hooks/             # Custom React hooks
 ├── types/             # TypeScript type definitions
