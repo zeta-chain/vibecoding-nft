@@ -24,7 +24,6 @@ interface NFTDisplayData {
   currentChain: string;
 }
 
-
 interface NFTListProps {
   selectedProvider: EIP6963ProviderDetail | null;
   primaryWallet: PrimaryWallet | null;
@@ -33,7 +32,9 @@ interface NFTListProps {
 export function NFTList({ selectedProvider, primaryWallet }: NFTListProps) {
   const [nfts, setNfts] = useState<NFTDisplayData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDestinations, setSelectedDestinations] = useState<Record<string, string>>({});
+  const [selectedDestinations, setSelectedDestinations] = useState<
+    Record<string, string>
+  >({});
   const [transferring, setTransferring] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -49,34 +50,36 @@ export function NFTList({ selectedProvider, primaryWallet }: NFTListProps) {
     };
 
     loadNFTs();
-    
+
     // Refresh data every 10 seconds in case of updates
     const interval = setInterval(loadNFTs, 10000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
   const handleDestinationChange = (nftId: string, destination: string) => {
-    setSelectedDestinations(prev => ({
+    setSelectedDestinations((prev) => ({
       ...prev,
-      [nftId]: destination
+      [nftId]: destination,
     }));
   };
 
   const handleTransfer = async (nft: NFTDisplayData) => {
     const nftKey = `${nft.contractAddress}_${nft.id}`;
     const destination = selectedDestinations[nftKey];
-    
+
     if (!destination) {
       alert('Please select a destination chain');
       return;
     }
 
-    setTransferring(prev => ({ ...prev, [nftKey]: true }));
-    
+    setTransferring((prev) => ({ ...prev, [nftKey]: true }));
+
     try {
-      console.log(`Transferring NFT ${nft.id} from ${nft.currentChain} to ${destination}`);
-      
+      console.log(
+        `Transferring NFT ${nft.id} from ${nft.currentChain} to ${destination}`
+      );
+
       // Get signer and provider
       const signerAndProvider = await getSignerAndProvider({
         selectedProvider,
@@ -89,21 +92,25 @@ export function NFTList({ selectedProvider, primaryWallet }: NFTListProps) {
 
       const { signer } = signerAndProvider;
       const userAddress = await signer.getAddress();
-      
+
       // Confirm transfer
       const confirmed = confirm(
         `Transfer NFT #${nft.id} from ${nft.currentChain} to ${destination}?\n\n` +
-        `This will initiate a cross-chain transfer. The NFT will be moved to the destination chain.\n\n` +
-        `You will need to approve two transactions:\n` +
-        `1. Approve the contract to transfer your NFT\n` +
-        `2. Execute the cross-chain transfer`
+          `This will initiate a cross-chain transfer. The NFT will be moved to the destination chain.\n\n` +
+          `You will need to approve two transactions:\n` +
+          `1. Approve the contract to transfer your NFT\n` +
+          `2. Execute the cross-chain transfer`
       );
-      
+
       if (confirmed) {
         // Get the contract address for the current chain
-        const currentChainContractAddress = getNFTContractAddress(nft.currentChain);
+        const currentChainContractAddress = getNFTContractAddress(
+          nft.currentChain
+        );
         if (!currentChainContractAddress) {
-          throw new Error(`Contract address not found for current chain: ${nft.currentChain}`);
+          throw new Error(
+            `Contract address not found for current chain: ${nft.currentChain}`
+          );
         }
 
         // Execute the actual transfer
@@ -116,23 +123,29 @@ export function NFTList({ selectedProvider, primaryWallet }: NFTListProps) {
           signer: signer,
           fromChainName: nft.currentChain,
         });
-        
-        alert(`Transfer successful! NFT #${nft.id} is being transferred to ${destination}.\n\nTransaction hash: ${result.hash}`);
-        
+
+        alert(
+          `Transfer successful! NFT #${nft.id} is being transferred to ${destination}.\n\nTransaction hash: ${result.hash}`
+        );
+
         // Refresh the NFT list to show updated state
         const nftData = getAllNFTsForDisplay();
         setNfts(nftData);
       }
     } catch (error) {
       console.error('Transfer failed:', error);
-      alert(`Transfer failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(
+        `Transfer failed: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`
+      );
     } finally {
-      setTransferring(prev => ({ ...prev, [nftKey]: false }));
+      setTransferring((prev) => ({ ...prev, [nftKey]: false }));
     }
   };
 
   const getAvailableDestinations = (currentChain: string) => {
-    return SUPPORTED_CHAINS.filter(chain => chain.name !== currentChain);
+    return SUPPORTED_CHAINS.filter((chain) => chain.name !== currentChain);
   };
 
   const getNFTContractAddress = (chainName: string): string | null => {
@@ -174,19 +187,32 @@ export function NFTList({ selectedProvider, primaryWallet }: NFTListProps) {
               <h3 className="nft-name">{nft.name}</h3>
               <p className="nft-description">{nft.description}</p>
               <div className="nft-details">
-                <p><strong>Token ID:</strong> {nft.id}</p>
-                <p><strong>Chain:</strong> {nft.chain}</p>
-                <p><strong>Current Chain:</strong> {nft.currentChain}</p>
-                <p><strong>Minted:</strong> {nft.mintDate}</p>
+                <p>
+                  <strong>Token ID:</strong> {nft.id}
+                </p>
+                <p>
+                  <strong>Chain:</strong> {nft.chain}
+                </p>
+                <p>
+                  <strong>Current Chain:</strong> {nft.currentChain}
+                </p>
+                <p>
+                  <strong>Minted:</strong> {nft.mintDate}
+                </p>
                 {nft.isTransferred && (
-                  <p><strong>Transfers:</strong> {nft.transferCount}</p>
+                  <p>
+                    <strong>Transfers:</strong> {nft.transferCount}
+                  </p>
                 )}
-                <p><strong>Contract:</strong> {nft.contractAddress.slice(0, 6)}...{nft.contractAddress.slice(-4)}</p>
+                <p>
+                  <strong>Contract:</strong> {nft.contractAddress.slice(0, 6)}
+                  ...{nft.contractAddress.slice(-4)}
+                </p>
               </div>
               <div className="nft-actions">
-                <a 
-                  href={nft.uri} 
-                  target="_blank" 
+                <a
+                  href={nft.uri}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="nft-link"
                 >
@@ -195,22 +221,36 @@ export function NFTList({ selectedProvider, primaryWallet }: NFTListProps) {
                 <div className="nft-transfer-section">
                   <select
                     className="nft-destination-select"
-                    value={selectedDestinations[`${nft.contractAddress}_${nft.id}`] || ''}
-                    onChange={(e) => handleDestinationChange(`${nft.contractAddress}_${nft.id}`, e.target.value)}
+                    value={
+                      selectedDestinations[
+                        `${nft.contractAddress}_${nft.id}`
+                      ] || ''
+                    }
+                    onChange={(e) =>
+                      handleDestinationChange(
+                        `${nft.contractAddress}_${nft.id}`,
+                        e.target.value
+                      )
+                    }
                   >
                     <option value="">Select destination</option>
-                    {getAvailableDestinations(nft.currentChain).map(chain => (
+                    {getAvailableDestinations(nft.currentChain).map((chain) => (
                       <option key={chain.name} value={chain.name}>
                         {chain.name}
                       </option>
                     ))}
                   </select>
-                  <button 
-                    className="nft-transfer-btn" 
+                  <button
+                    className="nft-transfer-btn"
                     onClick={() => handleTransfer(nft)}
-                    disabled={transferring[`${nft.contractAddress}_${nft.id}`] || !selectedDestinations[`${nft.contractAddress}_${nft.id}`]}
+                    disabled={
+                      transferring[`${nft.contractAddress}_${nft.id}`] ||
+                      !selectedDestinations[`${nft.contractAddress}_${nft.id}`]
+                    }
                   >
-                    {transferring[`${nft.contractAddress}_${nft.id}`] ? 'Transferring...' : 'Transfer'}
+                    {transferring[`${nft.contractAddress}_${nft.id}`]
+                      ? 'Transferring...'
+                      : 'Transfer'}
                   </button>
                 </div>
               </div>
