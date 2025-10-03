@@ -108,6 +108,13 @@
   display: flex;
   gap: 10px;
   justify-content: space-between;
+  align-items: center;
+}
+
+.nft-transfer-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .nft-link {
@@ -125,6 +132,26 @@
   background: #0056b3;
   color: white;
   text-decoration: none;
+}
+
+.nft-destination-select {
+  padding: 8px 12px;
+  background: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.9em;
+  min-width: 150px;
+}
+
+.nft-destination-select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.nft-destination-select option {
+  background: #2a2a2a;
+  color: #ffffff;
 }
 
 .nft-transfer-btn {
@@ -161,6 +188,16 @@
   
   .nft-actions {
     flex-direction: column;
+    gap: 15px;
+  }
+  
+  .nft-transfer-section {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .nft-destination-select {
+    min-width: 100%;
   }
   
   .nft-link,

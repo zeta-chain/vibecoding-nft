@@ -21,3 +21,9 @@ localnet.json
 test-ledger
 
 lib
+dist
+
+# Build artifacts
+build/
+*.log
+.DS_Store
