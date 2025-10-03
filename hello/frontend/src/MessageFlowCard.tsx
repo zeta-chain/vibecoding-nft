@@ -13,6 +13,7 @@ import { createNFTContract } from './contracts/EVMUniversalNFT';
 import type { EIP6963ProviderDetail } from './types/wallet';
 import { getSignerAndProvider } from './utils/ethersHelpers';
 import { formatNumberWithLocale } from './utils/formatNumber';
+import { createNFTData, saveNFTToStorage } from './utils/nftStorage';
 
 interface MessageFlowCardProps {
   selectedProvider: EIP6963ProviderDetail | null;
@@ -108,9 +109,66 @@ export function MessageFlowCard({
       setIsTxReceiptLoading(true);
 
       // Wait for the transaction to be mined
-      await result.wait();
+      const receipt = await result.wait();
+      
+      if (!receipt) {
+        throw new Error('Transaction receipt not found');
+      }
 
-      setConnectedChainTxHash(result.hash);
+      // Get the tokenId from the Transfer event in the receipt
+      let tokenId: string | null = null;
+      
+      // Look for Transfer event in the receipt logs
+      const transferEventTopic = ethers.id('Transfer(address,address,uint256)');
+      const receiptLogs = receipt.logs || [];
+
+      console.debug('Receipt logs:', receiptLogs);
+
+      const transferLog = receiptLogs.find(log => 
+        log.topics[0] === transferEventTopic && 
+        log.address.toLowerCase() === nftContractAddress.toLowerCase()
+      );
+      
+      if (transferLog && transferLog.topics[3]) {
+        // The tokenId is in the third topic (index 3)
+        // Use BigInt to handle large numbers safely
+        try {
+          const tokenIdBigInt = BigInt(transferLog.topics[3]);
+          tokenId = tokenIdBigInt.toString();
+        } catch (error) {
+          console.warn('Could not convert tokenId to BigInt:', error);
+          // Fallback: use the raw hex value
+          tokenId = transferLog.topics[3];
+        }
+      }
+
+      if (!tokenId) {
+        console.warn('Could not extract tokenId from transaction receipt');
+        // We'll still save the transaction hash for reference
+        tokenId = `unknown_${receipt.hash.slice(-8)}`;
+      }
+
+      // Save NFT data to local storage
+      try {
+        const nftData = createNFTData({
+          tokenId,
+          tokenURI: stringValue,
+          contractAddress: nftContractAddress,
+          chainId: supportedChain?.chainId.toString() || '',
+          chainName: supportedChain?.name || '',
+          mintTxHash: receipt.hash,
+          mintBlockNumber: receipt.blockNumber,
+          ownerAddress: userAddress,
+        });
+        
+        saveNFTToStorage(nftData);
+        console.log('NFT data saved to local storage:', nftData);
+      } catch (storageError) {
+        console.error('Failed to save NFT to storage:', storageError);
+        // Don't throw here - the mint was successful, storage is secondary
+      }
+
+      setConnectedChainTxHash(receipt.hash);
     } catch (error) {
       console.error('Error minting NFT:', error);
     } finally {
