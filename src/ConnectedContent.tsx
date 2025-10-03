@@ -52,7 +52,10 @@ const DynamicConnectedContent = ({
             primaryWallet={primaryWallet}
           />
         </div>
-        <NFTList />
+        <NFTList 
+          selectedProvider={selectedProvider || null}
+          primaryWallet={primaryWallet || null}
+        />
       </div>
       <Footer />
     </div>
@@ -93,7 +96,10 @@ const Eip6963ConnectedContent = ({
             primaryWallet={primaryWallet}
           />
         </div>
-        <NFTList />
+        <NFTList 
+          selectedProvider={selectedProvider || null}
+          primaryWallet={primaryWallet || null}
+        />
       </div>
       <Footer />
     </div>
