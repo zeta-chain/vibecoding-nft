@@ -3,6 +3,7 @@ import './ConnectedContent.css';
 import { type PrimaryWallet } from '@zetachain/wallet';
 
 import { NetworkSelector } from './components/NetworkSelector';
+import { NFTList } from './components/NFTList';
 import type { SupportedChain } from './constants/chains';
 import { USE_DYNAMIC_WALLET } from './constants/wallets';
 import { Footer } from './Footer';
@@ -31,26 +32,27 @@ const DynamicConnectedContent = ({
   return (
     <div className="main-container">
       <div className="content-container">
-        <div className="content-container-inner">
-          <div className="content-container-inner-header">
-            <h1>Say Hello from</h1>
-            <NetworkSelector
-              selectedChain={supportedChain}
-              onNetworkSelect={handleNetworkSelect}
-            />
+        <div className="header-and-form-container">
+          <div className="content-container-inner">
+            <div className="content-container-inner-header">
+              <h1>Say Hello from</h1>
+              <NetworkSelector
+                selectedChain={supportedChain}
+                onNetworkSelect={handleNetworkSelect}
+              />
+            </div>
+            <p className="content-container-inner-description">
+              Mint NFTs with metadata URIs on{' '}
+              {supportedChain?.name || 'a supported network'}. Each NFT is stored locally and ready for cross-chain transfers.
+            </p>
           </div>
-          <p className="content-container-inner-description">
-            Make a cross-chain call with a message from{' '}
-            {supportedChain?.name || 'a supported network'} to a universal
-            contract on ZetaChain that emits a{' '}
-            <span className="highlight">HelloEvent</span>.
-          </p>
+          <MessageFlowCard
+            selectedProvider={selectedProvider}
+            supportedChain={supportedChain}
+            primaryWallet={primaryWallet}
+          />
         </div>
-        <MessageFlowCard
-          selectedProvider={selectedProvider}
-          supportedChain={supportedChain}
-          primaryWallet={primaryWallet}
-        />
+        <NFTList />
       </div>
       <Footer />
     </div>
@@ -71,26 +73,27 @@ const Eip6963ConnectedContent = ({
   return (
     <div className="main-container">
       <div className="content-container">
-        <div className="content-container-inner">
-          <div className="content-container-inner-header">
-            <h1>Say Hello from</h1>
-            <NetworkSelector
-              selectedChain={supportedChain}
-              onNetworkSelect={handleNetworkSelect}
-            />
+        <div className="header-and-form-container">
+          <div className="content-container-inner">
+            <div className="content-container-inner-header">
+              <h1>Say Hello from</h1>
+              <NetworkSelector
+                selectedChain={supportedChain}
+                onNetworkSelect={handleNetworkSelect}
+              />
+            </div>
+            <p className="content-container-inner-description">
+              Mint NFTs with metadata URIs on{' '}
+              {supportedChain?.name || 'a supported network'}. Each NFT is stored locally and ready for cross-chain transfers.
+            </p>
           </div>
-          <p className="content-container-inner-description">
-            Make a cross-chain call with a message from{' '}
-            {supportedChain?.name || 'a supported network'} to a universal
-            contract on ZetaChain that emits a{' '}
-            <span className="highlight">HelloEvent</span>.
-          </p>
+          <MessageFlowCard
+            selectedProvider={selectedProvider}
+            supportedChain={supportedChain}
+            primaryWallet={primaryWallet}
+          />
         </div>
-        <MessageFlowCard
-          selectedProvider={selectedProvider}
-          supportedChain={supportedChain}
-          primaryWallet={primaryWallet}
-        />
+        <NFTList />
       </div>
       <Footer />
     </div>

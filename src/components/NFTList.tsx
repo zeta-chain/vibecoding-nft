@@ -2,7 +2,7 @@ import './NFTList.css';
 
 import { useEffect, useState } from 'react';
 
-import { getAllNFTsForDisplay, getStorageStatsForDisplay } from '../utils/nftDisplay';
+import { getAllNFTsForDisplay } from '../utils/nftDisplay';
 
 interface NFTDisplayData {
   id: string;
@@ -18,33 +18,16 @@ interface NFTDisplayData {
   currentChain: string;
 }
 
-interface StorageStats {
-  totalNFTs: number;
-  totalTransferred: number;
-  chainsWithNFTs: string;
-  totalTransfers: number;
-  averageTransfersPerNFT: string;
-}
 
 export function NFTList() {
   const [nfts, setNfts] = useState<NFTDisplayData[]>([]);
-  const [stats, setStats] = useState<StorageStats>({
-    totalNFTs: 0,
-    totalTransferred: 0,
-    chainsWithNFTs: 'None',
-    totalTransfers: 0,
-    averageTransfersPerNFT: '0',
-  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadNFTs = () => {
       try {
         const nftData = getAllNFTsForDisplay();
-        const statsData = getStorageStatsForDisplay();
-        
         setNfts(nftData);
-        setStats(statsData);
       } catch (error) {
         console.error('Failed to load NFTs:', error);
       } finally {
@@ -72,60 +55,16 @@ export function NFTList() {
   if (nfts.length === 0) {
     return (
       <div className="nft-list-container">
-        <h2>My NFTs</h2>
         <p>No NFTs found. Mint your first NFT to see it here!</p>
-        <div className="nft-stats">
-          <h3>Storage Statistics</h3>
-          <p>Total NFTs: {stats.totalNFTs}</p>
-          <p>Chains with NFTs: {stats.chainsWithNFTs}</p>
-        </div>
       </div>
     );
   }
 
   return (
     <div className="nft-list-container">
-      <h2>My NFTs ({nfts.length})</h2>
-      
-      <div className="nft-stats">
-        <h3>Storage Statistics</h3>
-        <div className="stats-grid">
-          <div className="stat-item">
-            <span className="stat-label">Total NFTs:</span>
-            <span className="stat-value">{stats.totalNFTs}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Transferred:</span>
-            <span className="stat-value">{stats.totalTransferred}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Total Transfers:</span>
-            <span className="stat-value">{stats.totalTransfers}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Avg Transfers/NFT:</span>
-            <span className="stat-value">{stats.averageTransfersPerNFT}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Chains:</span>
-            <span className="stat-value">{stats.chainsWithNFTs}</span>
-          </div>
-        </div>
-      </div>
-
       <div className="nft-grid">
         {nfts.map((nft) => (
           <div key={`${nft.contractAddress}_${nft.id}`} className="nft-card">
-            <div className="nft-image">
-              <img 
-                src={nft.image} 
-                alt={nft.name}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/placeholder-nft.png';
-                }}
-              />
-            </div>
             <div className="nft-info">
               <h3 className="nft-name">{nft.name}</h3>
               <p className="nft-description">{nft.description}</p>
