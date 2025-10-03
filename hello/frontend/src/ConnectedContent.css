@@ -5,6 +5,14 @@
   gap: 64px;
 }
 
+.header-and-form-container {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  width: 100%;
+  align-items: flex-start;
+}
+
 .content-container-inner {
   display: flex;
   flex-direction: column;
@@ -60,8 +68,8 @@
 
 @media (min-width: 1168px) {
   .content-container {
-    flex-direction: row;
-    gap: 32px;
+    flex-direction: column;
+    gap: 64px;
     min-height: 65vh;
   }
 

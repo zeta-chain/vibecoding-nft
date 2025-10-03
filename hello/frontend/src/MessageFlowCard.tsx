@@ -65,7 +65,7 @@ export function MessageFlowCard({
     switch (chain.name) {
       case 'ZetaChain':
         return NFT_CONTRACT_ADDRESSES.ZETACHAIN;
-      case 'Sepolia':
+      case 'Ethereum Sepolia':
         return NFT_CONTRACT_ADDRESSES.SEPOLIA;
       case 'Base Sepolia':
         return NFT_CONTRACT_ADDRESSES.BASE_SEPOLIA;
