@@ -35,7 +35,7 @@ const DynamicConnectedContent = ({
         <div className="header-and-form-container">
           <div className="content-container-inner">
             <div className="content-container-inner-header">
-              <h1>Say Hello from</h1>
+              <h1>Mint your NFT on</h1>
               <NetworkSelector
                 selectedChain={supportedChain}
                 onNetworkSelect={handleNetworkSelect}
@@ -43,7 +43,8 @@ const DynamicConnectedContent = ({
             </div>
             <p className="content-container-inner-description">
               Mint NFTs with metadata URIs on{' '}
-              {supportedChain?.name || 'a supported network'}. Each NFT is stored locally and ready for cross-chain transfers.
+              {supportedChain?.name || 'a supported network'}. Each NFT is
+              stored locally and ready for cross-chain transfers.
             </p>
           </div>
           <MessageFlowCard
@@ -52,7 +53,7 @@ const DynamicConnectedContent = ({
             primaryWallet={primaryWallet}
           />
         </div>
-        <NFTList 
+        <NFTList
           selectedProvider={selectedProvider || null}
           primaryWallet={primaryWallet || null}
         />
@@ -79,7 +80,7 @@ const Eip6963ConnectedContent = ({
         <div className="header-and-form-container">
           <div className="content-container-inner">
             <div className="content-container-inner-header">
-              <h1>Say Hello from</h1>
+              <h1>Mint your NFT on</h1>
               <NetworkSelector
                 selectedChain={supportedChain}
                 onNetworkSelect={handleNetworkSelect}
@@ -87,7 +88,8 @@ const Eip6963ConnectedContent = ({
             </div>
             <p className="content-container-inner-description">
               Mint NFTs with metadata URIs on{' '}
-              {supportedChain?.name || 'a supported network'}. Each NFT is stored locally and ready for cross-chain transfers.
+              {supportedChain?.name || 'a supported network'}. Each NFT is
+              stored locally and ready for cross-chain transfers.
             </p>
           </div>
           <MessageFlowCard
@@ -96,7 +98,7 @@ const Eip6963ConnectedContent = ({
             primaryWallet={primaryWallet}
           />
         </div>
-        <NFTList 
+        <NFTList
           selectedProvider={selectedProvider || null}
           primaryWallet={primaryWallet || null}
         />
