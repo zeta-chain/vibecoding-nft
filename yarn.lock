@@ -10391,10 +10391,10 @@ viem@>=2.29.0, viem@^2.27.2, viem@^2.28.4, viem@^2.31.7, viem@^2.33.0, viem@^2.3
     ox "0.9.3"
     ws "8.18.3"
 
-vite@^7.0.4:
-  version "7.1.6"
-  resolved "https://registry.npmjs.org/vite/-/vite-7.1.6.tgz"
-  integrity sha512-SRYIB8t/isTwNn8vMB3MR6E+EQZM/WG1aKmmIUCfDXfVvKfc20ZpamngWHKzAmmu9ppsgxsg4b2I7c90JZudIQ==
+vite@^7.1.11:
+  version "7.1.11"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.11.tgz#4d006746112fee056df64985191e846ebfb6007e"
+  integrity sha512-uzcxnSDVjAopEUjljkWh8EIrg6tlzrjFUfMcR1EVsRDGwf/ccef0qQPRyOrROwhrTDaApueq+ja+KLPlzR/zdg==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.5.0"
